@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <header id="logo-bar">  
+        <div id="logo">Protein Structure Visualization</div>  
+    </header>  
+    <script src="https://3dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Load d3.js -->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <!-- <script src="d3.v4.js"></script> -->
+    <!-- Load color palettes -->
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <!-- <script src="d3.scale.chromatic.v1.min.js"></script> -->
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+
+</head>
+<body>
+<div class="viewer-container">  
+    <div>  
+        <h1>Wild-type</h1>  
+        <div id="wildtypeViewer" style="width: 500px; height: 500px; position: relative; margin-left: 20px;" class="viewer"></div>  
+    </div>  
+    <div>  
+        <h1>Mutated</h1>   
+        <div id="mutatedViewer" style="width: 500px; height: 500px; position: relative; margin-left: 20px;" class="viewer"></div>  
+        <h3>Protein Structure Details:</h3>  
+        <table border="1" class="table">  
+            <tr>  
+                <th>Mutation</th>  
+                <th>Mutation Location</th>  
+                <th>ΔΔG from mutation (kcal/mol)</th>  
+            </tr>  
+            <tr>  
+                <td><span class="underline">*{{ mutation_details.mutation }}</span></td>  
+                <td><span class="underline">*{{ mutation_details.position }}</span></td>  
+                <td><span class="underline">{{ mutation_details.ddG }}</span></td>  
+            </tr>  
+        </table> 
+    </div>  
+</div>
+
+<div class="viewer-container">
+    <div>
+        <h1>Predicted ΔΔG Matrix</h1>
+        <p>The ΔΔG values are predicted using the ThermoMPNN model. The columns represent the index of the original Amino Acid in the selected protein chain. The rows represent the substituted Amino Acid.</p>
+    </div>
+</div>
+
+<div >
+    <div>
+        <!-- <div id="predictedDdgViewer" style="width: 1000px; height: 400px; position: relative; margin-left: 20px;" class="viewer"></div>   -->
+
+        <!-- Create save button -->
+        <div style="max-width:1000px;">
+            <center><button id="saveButton">Save</button></center>
+        </div>
+        <br> </br>
+        <div id="colorLegend">  
+            <div id="colorBar"></div>  
+            <div id="colorBarLabels"></div>  
+        </div>  
+        <style>  
+            #colorPalette { 
+                position: relative; 
+                display: flex;  
+                align-items: center;  
+                height: 30px;  
+                margin-bottom: 5px; 
+                margin-left: 40px;
+            }
+            #colorLegend {  
+                width: 100%;  
+                margin: 20px 0;  
+            }  
+            #colorBarLabels {  
+                display: flex;  
+                justify-content: space-between;  
+                margin-top: 5px;  
+            }   
+          
+            #colorBar {  
+                height: 20px;  
+                background: linear-gradient(to right, #000, #fff); 
+                border: 1px solid #000;  
+            }  
+          
+            .legendLabel { 
+                flex: 0 0 auto;  
+                text-align: center;  
+            }
+            .legendLabel:last-child {  
+        text-align: right; 
+        transform: translateX(-100%); 
+    }    
+        </style>
+        <!-- Create a div for the predicted ddG matrix -->
+        <div id="d3_heatmap"></div>
+        
+        <script>
+            var script = document.createElement('script')
+            script.src = "../static/pdb_matrices/".concat("{{ pdb_id }}", ".js")
+            document.head.appendChild(script)
+        </script>
+
+    </div>
+
+</div>
+
+
+<script>
+function initializeViewer(viewerElementId, pdbFilePath, callback) {
+    var element = document.getElementById(viewerElementId);
+    if (!element) {
+        console.error('The element with id ' + viewerElementId + ' was not found.');
+        return;
+    }
+
+    var viewer = $3Dmol.createViewer(element, {
+        defaultcolors: $3Dmol.rasmolElementColors
+    });
+
+    fetch(pdbFilePath)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok for ' + pdbFilePath);
+            }
+            return response.text();
+        })
+        .then(data => {
+            viewer.addModel(data, "pdb");
+            viewer.setStyle({}, {cartoon: {color: 'spectrum'},'stick':{}});
+            viewer.zoomTo();
+            viewer.render();
+            if (callback) {
+                callback(); // execute the callback function if provided
+            }
+        })
+        .catch(error => {
+            console.error("Error loading the PDB file:", error);
+        });
+}
+
+// when calling initializeViewer, provide a callback function
+window.addEventListener('load', function() {
+    var wildtypePdbUrl = "{{ wildtype_pdb_url }}";
+    var mutationPdbUrl = "{{ mutation_pdb_url }}";
+
+    initializeViewer('wildtypeViewer', wildtypePdbUrl, function() {
+        // this function will be called after the wildtype viewer has been initialized
+        initializeViewer('mutatedViewer', mutationPdbUrl);
+    });
+});
+
+var colorPaletteDiv = d3.select("#colorPalette");  
+colorPaletteDiv.append("div")  
+    .attr("class", "colorBar"); 
+
+
+  var min_ddG = parseFloat("{{ min_ddG }}");  
+var max_ddG = parseFloat("{{ max_ddG }}");  
+  
+var colorBar = d3.select("#colorBar");  
+  
+var numColors = 10; // Number of colors to sample from the interpolator  
+var pctScale = d3.scaleLinear().domain([1, numColors]).range([0, 100]);  
+var gradientCSS = "linear-gradient(to right";  
+  
+for (var i = 0; i <= numColors; i++) {  
+    var pct = pctScale(i);  
+    var color = d3.interpolateMagma(i / numColors); 
+    gradientCSS += `, ${color} ${pct}%`;  
+}  
+  
+gradientCSS += ")";  
+  
+colorBar.style("background", gradientCSS);  
+  
+// Create labels for the color bar  
+var colorBarLabelsDiv = d3.select("#colorBarLabels");  
+  
+var labels = [min_ddG, (min_ddG + max_ddG) / 2, max_ddG];  
+colorBarLabelsDiv.selectAll(".legendLabel")  
+    .data(labels)  
+    .enter()  
+    .append("div")  
+    .attr("class", "legendLabel")  
+    .style("position", "absolute") 
+    .style("left", function(d, i) { return `${i * 50}%`; })
+    .text(function(d) { return d.toFixed(1); });
+
+</script>
+
+    <p>* Mutation location identifies the exact position within a protein's amino acid sequence,
+        commencing from the N-terminus—the initial point of the sequence. This detail pinpoints where an original amino
+        acid is substituted by another, affecting the protein's structure and potentially its function.</p>
+    <p>* The list of all 20 standard amino acids along with their single-letter abbreviations:
+Alanine (A)
+Arginine (R)
+Asparagine (N)
+Aspartic acid (D)
+Cysteine (C)
+Glutamine (Q)
+Glutamic acid (E)
+Glycine (G)
+Histidine (H)
+Isoleucine (I)
+Leucine (L)
+Lysine (K)
+Methionine (M)
+Phenylalanine (F)
+Proline (P)
+Serine (S)
+Threonine (T)
+Tryptophan (W)
+Tyrosine (Y)
+Valine (V)
+    </p>
+
+</body>
+</html>

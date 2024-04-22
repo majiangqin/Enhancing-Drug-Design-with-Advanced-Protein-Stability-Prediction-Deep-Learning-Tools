@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Protein Structure</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='style.css') }}">
+</head>
+<body>
+    <header>  
+        <div id="logo_main">AlgoRxplorers</div>  
+    </header>  
+    <div class="centered-container">
+
+        <h2>Hello, Welcome to ThermoMPNN+</h2>
+        <p>We're here to create a user-friendly and interactive protein structure visualization guide
+            regarding mutations that occur and the resulting change in stability.</p>
+    </div>
+
+    <form action="/display" method="post">
+        <label for="pdb_id">PDB ID:</label>
+        <select name="pdb_id" id="pdb_id">
+            {% for pdb_id in pdb_ids %}
+            <option value="{{ pdb_id }}">{{ pdb_id }}</option>
+            {% endfor %}
+        </select>
+        <label for="mutation">Mutation Code:</label>
+        <select name="mutation" id="mutation">
+
+        </select>
+        <input type="submit" value="Submit">
+    </form>
+
+<script>
+    // JavaScript to handle dynamic loading of mutation codes based on selected PDB ID
+    document.getElementById('pdb_id').addEventListener('change', function () {  
+    var pdb_id = this.value;  
+    var mutationSelect = document.getElementById('mutation');  
+    mutationSelect.innerHTML = ''; // Clear current options  
+  
+    //using Flask tojson filter  
+    var mutations_data = {{ mutations_data | tojson }};  
+  
+    if (mutations_data[pdb_id] && mutations_data[pdb_id]['mutations']) {  
+        Object.keys(mutations_data[pdb_id]['mutations']).forEach(function (mutation_code) {  
+            var option = document.createElement('option');  
+            option.value = mutation_code;  
+            option.text = mutation_code;  
+            mutationSelect.appendChild(option);  
+        });  
+    }  
+}); 
+
+    // trigger change event to load the mutation codes for the initial PDB ID
+    document.getElementById('pdb_id').dispatchEvent(new Event('change'));
+</script>
+
+</body>
+</html>

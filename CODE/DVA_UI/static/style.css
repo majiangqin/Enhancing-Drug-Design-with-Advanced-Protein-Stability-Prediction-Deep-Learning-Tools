@@ -1,0 +1,95 @@
+
+/*body {*/
+/*            margin: 0;*/
+/*            text-align: center;*/
+/*        }*/
+
+.centered-container {
+            text-align: center; 
+            margin: 20px 0; 
+        }
+#logo-bar {    
+            background-color: #4cae4c;     
+            width: 100%;     
+            padding: 10px 0;   
+            box-sizing: border-box;    
+            border-radius: 10px;      
+        }    
+            
+ #logo {    
+            color: white;                 
+            font-family: 'Arial', sans-serif;    
+            font-size: 24px;            
+            font-weight: bold;            
+            text-align: center;           
+             
+        }    
+#logo_main {    
+            color: #4cae4c;                 
+            font-family: 'Arial', sans-serif;    
+            font-size: 28px;            
+            font-weight: bold;            
+            text-align: left;           
+             
+        }  
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
+}
+
+form {
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+select, input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+input[type="submit"] {
+    background-color: #5cb85c;
+    color: white;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #4cae4c;
+}
+
+.viewer-container {  
+    display: flex;  
+    justify-content: space-between; 
+    margin-top: 20px;
+}  
+
+.viewer {  
+    width: 400px;  
+    height: 400px;  
+    position: relative;  
+    margin-right: 400px;
+}  
+
+.table{
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
+
+.underline {
+    text-decoration: underline;
+}

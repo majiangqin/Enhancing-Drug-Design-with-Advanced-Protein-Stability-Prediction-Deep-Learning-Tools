@@ -1,0 +1,748 @@
+<!--
+    Thank you for inspecting this page! If you find some issues, let me know!
+    Library     : pip install d3blocks
+    Author      : E.Taskesen
+    Mail        : erdogant@gmail.com
+    Github      : https://github.com/d3blocks/d3blocks
+	References  : d3-graph-gallery.com
+ -->
+
+<script async src='https://media.ethicalads.io/media/client/ethicalads.min.js'></script>
+<div data-ea-publisher='erdogantgithubio' data-ea-type='text' data-ea-style='stickybox'></div>
+
+<!-- Create save button -->
+
+<div style="max-width:450px;">
+    <center><button id="saveButton">Save</button></center>
+</div>
+
+
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="d3.v4.js"></script>
+<!-- Load color palettes -->
+<script src="d3.scale.chromatic.v1.min.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="d3_heatmap"></div>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 80, right: 25, bottom: 30, left: 40},
+  width = 450 - margin.left - margin.right,
+  height = 760 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#d3_heatmap")
+.append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+.append("g")
+  .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+//Read the data
+//d3.csv("1AAR_matrix_T.html", function(data) {
+
+//Store data in variable
+var data = 
+[
+	{group : "A", variable : "0", value : "1.4953"},
+{group : "D", variable : "0", value : "2.4514"},
+{group : "E", variable : "0", value : "2.2273"},
+{group : "G", variable : "0", value : "2.1428"},
+{group : "H", variable : "0", value : "1.4903"},
+{group : "K", variable : "0", value : "2.1649"},
+{group : "N", variable : "0", value : "2.0557"},
+{group : "P", variable : "0", value : "1.6526"},
+{group : "Q", variable : "0", value : "1.8173"},
+{group : "R", variable : "0", value : "2.0432"},
+{group : "S", variable : "0", value : "1.9042"},
+{group : "T", variable : "0", value : "1.7511"},
+{group : "D", variable : "1", value : "1.0981"},
+{group : "G", variable : "1", value : "1.1004"},
+{group : "A", variable : "2", value : "2.5572"},
+{group : "C", variable : "2", value : "1.6897"},
+{group : "D", variable : "2", value : "3.6073"},
+{group : "E", variable : "2", value : "3.5809"},
+{group : "F", variable : "2", value : "2.0556"},
+{group : "G", variable : "2", value : "3.3143"},
+{group : "H", variable : "2", value : "3.2714"},
+{group : "K", variable : "2", value : "3.2532"},
+{group : "M", variable : "2", value : "1.6773"},
+{group : "N", variable : "2", value : "3.4802"},
+{group : "P", variable : "2", value : "3.4805"},
+{group : "Q", variable : "2", value : "3.3815"},
+{group : "R", variable : "2", value : "3.2685"},
+{group : "S", variable : "2", value : "3.3925"},
+{group : "T", variable : "2", value : "2.6748"},
+{group : "W", variable : "2", value : "2.5192"},
+{group : "Y", variable : "2", value : "2.4972"},
+{group : "A", variable : "3", value : "1.0176"},
+{group : "D", variable : "3", value : "1.7167"},
+{group : "E", variable : "3", value : "1.2294"},
+{group : "G", variable : "3", value : "1.8271"},
+{group : "P", variable : "3", value : "2.1972"},
+{group : "A", variable : "4", value : "2.122"},
+{group : "C", variable : "4", value : "1.1709"},
+{group : "D", variable : "4", value : "2.815"},
+{group : "E", variable : "4", value : "2.8781"},
+{group : "F", variable : "4", value : "1.5735"},
+{group : "G", variable : "4", value : "2.6232"},
+{group : "H", variable : "4", value : "2.7502"},
+{group : "K", variable : "4", value : "2.8528"},
+{group : "M", variable : "4", value : "1.319"},
+{group : "N", variable : "4", value : "2.8291"},
+{group : "P", variable : "4", value : "2.6694"},
+{group : "Q", variable : "4", value : "2.8263"},
+{group : "R", variable : "4", value : "2.7906"},
+{group : "S", variable : "4", value : "2.627"},
+{group : "T", variable : "4", value : "2.0939"},
+{group : "W", variable : "4", value : "2.1002"},
+{group : "Y", variable : "4", value : "2.1536"},
+{group : "D", variable : "5", value : "1.9687"},
+{group : "G", variable : "5", value : "1.7239"},
+{group : "N", variable : "5", value : "1.2519"},
+{group : "P", variable : "5", value : "2.9275"},
+{group : "P", variable : "6", value : "1.3493"},
+{group : "G", variable : "7", value : "1.0131"},
+{group : "P", variable : "8", value : "1.201"},
+{group : "A", variable : "9", value : "1.6189"},
+{group : "D", variable : "9", value : "1.4334"},
+{group : "E", variable : "9", value : "1.7703"},
+{group : "F", variable : "9", value : "1.3924"},
+{group : "H", variable : "9", value : "1.5142"},
+{group : "I", variable : "9", value : "1.9293"},
+{group : "K", variable : "9", value : "1.8179"},
+{group : "L", variable : "9", value : "1.6224"},
+{group : "M", variable : "9", value : "1.602"},
+{group : "N", variable : "9", value : "1.3324"},
+{group : "P", variable : "9", value : "2.3075"},
+{group : "Q", variable : "9", value : "1.7387"},
+{group : "R", variable : "9", value : "1.8776"},
+{group : "S", variable : "9", value : "1.5656"},
+{group : "T", variable : "9", value : "1.896"},
+{group : "V", variable : "9", value : "1.9766"},
+{group : "W", variable : "9", value : "1.4592"},
+{group : "Y", variable : "9", value : "1.4999"},
+{group : "D", variable : "11", value : "1.2178"},
+{group : "G", variable : "11", value : "1.2835"},
+{group : "P", variable : "11", value : "1.2589"},
+{group : "A", variable : "12", value : "1.6921"},
+{group : "D", variable : "12", value : "2.4528"},
+{group : "E", variable : "12", value : "2.1666"},
+{group : "G", variable : "12", value : "2.4366"},
+{group : "H", variable : "12", value : "1.5184"},
+{group : "K", variable : "12", value : "1.9554"},
+{group : "N", variable : "12", value : "2.1923"},
+{group : "P", variable : "12", value : "2.3361"},
+{group : "Q", variable : "12", value : "1.9134"},
+{group : "R", variable : "12", value : "1.9811"},
+{group : "S", variable : "12", value : "1.9467"},
+{group : "T", variable : "12", value : "1.6267"},
+{group : "D", variable : "13", value : "1.41"},
+{group : "G", variable : "13", value : "1.1959"},
+{group : "P", variable : "13", value : "1.0817"},
+{group : "A", variable : "14", value : "2.1352"},
+{group : "C", variable : "14", value : "1.2399"},
+{group : "D", variable : "14", value : "3.1084"},
+{group : "E", variable : "14", value : "2.791"},
+{group : "F", variable : "14", value : "1.1443"},
+{group : "G", variable : "14", value : "2.5684"},
+{group : "H", variable : "14", value : "2.6159"},
+{group : "K", variable : "14", value : "2.6454"},
+{group : "N", variable : "14", value : "2.9317"},
+{group : "P", variable : "14", value : "2.681"},
+{group : "Q", variable : "14", value : "2.7636"},
+{group : "R", variable : "14", value : "2.6293"},
+{group : "S", variable : "14", value : "2.5992"},
+{group : "T", variable : "14", value : "2.2167"},
+{group : "W", variable : "14", value : "1.6891"},
+{group : "Y", variable : "14", value : "1.7359"},
+{group : "P", variable : "15", value : "1.4663"},
+{group : "A", variable : "16", value : "1.5339"},
+{group : "D", variable : "16", value : "3.2804"},
+{group : "E", variable : "16", value : "3.0103"},
+{group : "F", variable : "16", value : "1.894"},
+{group : "G", variable : "16", value : "2.5196"},
+{group : "H", variable : "16", value : "2.5008"},
+{group : "K", variable : "16", value : "2.8521"},
+{group : "M", variable : "16", value : "1.5084"},
+{group : "N", variable : "16", value : "2.7841"},
+{group : "P", variable : "16", value : "3.2314"},
+{group : "Q", variable : "16", value : "2.7931"},
+{group : "R", variable : "16", value : "2.9004"},
+{group : "S", variable : "16", value : "2.435"},
+{group : "T", variable : "16", value : "1.7659"},
+{group : "W", variable : "16", value : "2.3623"},
+{group : "Y", variable : "16", value : "2.1913"},
+{group : "P", variable : "17", value : "1.3319"},
+{group : "P", variable : "19", value : "1.1645"},
+{group : "A", variable : "20", value : "1.2209"},
+{group : "C", variable : "20", value : "1.0397"},
+{group : "F", variable : "20", value : "1.175"},
+{group : "G", variable : "20", value : "1.8313"},
+{group : "H", variable : "20", value : "1.4776"},
+{group : "I", variable : "20", value : "1.4858"},
+{group : "K", variable : "20", value : "2.4521"},
+{group : "L", variable : "20", value : "1.6328"},
+{group : "M", variable : "20", value : "1.1883"},
+{group : "N", variable : "20", value : "1.4691"},
+{group : "P", variable : "20", value : "2.4762"},
+{group : "Q", variable : "20", value : "1.104"},
+{group : "R", variable : "20", value : "2.459"},
+{group : "S", variable : "20", value : "1.1636"},
+{group : "T", variable : "20", value : "1.6634"},
+{group : "V", variable : "20", value : "1.742"},
+{group : "Y", variable : "20", value : "1.05"},
+{group : "A", variable : "21", value : "1.2208"},
+{group : "D", variable : "21", value : "1.7671"},
+{group : "E", variable : "21", value : "1.6074"},
+{group : "F", variable : "21", value : "1.4915"},
+{group : "G", variable : "21", value : "1.5468"},
+{group : "H", variable : "21", value : "1.3404"},
+{group : "I", variable : "21", value : "1.214"},
+{group : "L", variable : "21", value : "1.0361"},
+{group : "M", variable : "21", value : "1.0046"},
+{group : "N", variable : "21", value : "1.2283"},
+{group : "P", variable : "21", value : "1.041"},
+{group : "V", variable : "21", value : "1.2794"},
+{group : "W", variable : "21", value : "1.8154"},
+{group : "Y", variable : "21", value : "1.574"},
+{group : "A", variable : "22", value : "2.7191"},
+{group : "C", variable : "22", value : "2.0405"},
+{group : "D", variable : "22", value : "3.5627"},
+{group : "E", variable : "22", value : "3.7124"},
+{group : "F", variable : "22", value : "1.9632"},
+{group : "G", variable : "22", value : "3.6416"},
+{group : "H", variable : "22", value : "3.3089"},
+{group : "K", variable : "22", value : "3.2727"},
+{group : "L", variable : "22", value : "1.1804"},
+{group : "M", variable : "22", value : "1.7604"},
+{group : "N", variable : "22", value : "3.4962"},
+{group : "P", variable : "22", value : "3.3522"},
+{group : "Q", variable : "22", value : "3.3269"},
+{group : "R", variable : "22", value : "3.3874"},
+{group : "S", variable : "22", value : "3.3905"},
+{group : "T", variable : "22", value : "2.8704"},
+{group : "W", variable : "22", value : "2.7191"},
+{group : "Y", variable : "22", value : "2.5815"},
+{group : "P", variable : "23", value : "2.2318"},
+{group : "P", variable : "24", value : "2.6362"},
+{group : "A", variable : "25", value : "2.1535"},
+{group : "C", variable : "25", value : "1.3098"},
+{group : "D", variable : "25", value : "3.0344"},
+{group : "E", variable : "25", value : "3.0579"},
+{group : "F", variable : "25", value : "1.6654"},
+{group : "G", variable : "25", value : "2.8554"},
+{group : "H", variable : "25", value : "2.9354"},
+{group : "K", variable : "25", value : "2.9106"},
+{group : "M", variable : "25", value : "1.1846"},
+{group : "N", variable : "25", value : "2.9662"},
+{group : "P", variable : "25", value : "2.8394"},
+{group : "Q", variable : "25", value : "2.9943"},
+{group : "R", variable : "25", value : "2.8659"},
+{group : "S", variable : "25", value : "2.9356"},
+{group : "T", variable : "25", value : "2.1213"},
+{group : "W", variable : "25", value : "2.1307"},
+{group : "Y", variable : "25", value : "2.1661"},
+{group : "A", variable : "26", value : "1.5434"},
+{group : "C", variable : "26", value : "1.1401"},
+{group : "D", variable : "26", value : "3.3296"},
+{group : "E", variable : "26", value : "2.8332"},
+{group : "F", variable : "26", value : "1.5811"},
+{group : "G", variable : "26", value : "2.3691"},
+{group : "H", variable : "26", value : "1.6262"},
+{group : "L", variable : "26", value : "1.0066"},
+{group : "M", variable : "26", value : "1.0098"},
+{group : "N", variable : "26", value : "2.0874"},
+{group : "P", variable : "26", value : "1.9229"},
+{group : "Q", variable : "26", value : "1.3268"},
+{group : "S", variable : "26", value : "1.6781"},
+{group : "T", variable : "26", value : "1.5461"},
+{group : "V", variable : "26", value : "1.3382"},
+{group : "W", variable : "26", value : "2.0534"},
+{group : "Y", variable : "26", value : "1.5283"},
+{group : "P", variable : "27", value : "2.24"},
+{group : "A", variable : "28", value : "1.1343"},
+{group : "C", variable : "28", value : "1.1565"},
+{group : "D", variable : "28", value : "2.6735"},
+{group : "E", variable : "28", value : "2.1146"},
+{group : "F", variable : "28", value : "1.2122"},
+{group : "G", variable : "28", value : "2.1006"},
+{group : "H", variable : "28", value : "1.2869"},
+{group : "I", variable : "28", value : "1.0218"},
+{group : "N", variable : "28", value : "1.7722"},
+{group : "P", variable : "28", value : "2.7306"},
+{group : "S", variable : "28", value : "1.5909"},
+{group : "T", variable : "28", value : "1.6553"},
+{group : "V", variable : "28", value : "1.4045"},
+{group : "W", variable : "28", value : "1.2661"},
+{group : "Y", variable : "28", value : "1.2086"},
+{group : "A", variable : "29", value : "2.5279"},
+{group : "C", variable : "29", value : "1.8077"},
+{group : "D", variable : "29", value : "3.2783"},
+{group : "E", variable : "29", value : "3.243"},
+{group : "F", variable : "29", value : "1.642"},
+{group : "G", variable : "29", value : "3.1661"},
+{group : "H", variable : "29", value : "3.0304"},
+{group : "K", variable : "29", value : "3.0553"},
+{group : "M", variable : "29", value : "1.4844"},
+{group : "N", variable : "29", value : "3.119"},
+{group : "P", variable : "29", value : "2.8796"},
+{group : "Q", variable : "29", value : "3.1864"},
+{group : "R", variable : "29", value : "3.0432"},
+{group : "S", variable : "29", value : "3.1753"},
+{group : "T", variable : "29", value : "2.7075"},
+{group : "W", variable : "29", value : "2.2274"},
+{group : "Y", variable : "29", value : "2.1699"},
+{group : "P", variable : "30", value : "1.8068"},
+{group : "P", variable : "31", value : "1.85"},
+{group : "D", variable : "32", value : "1.8519"},
+{group : "E", variable : "32", value : "1.2202"},
+{group : "G", variable : "32", value : "1.4741"},
+{group : "N", variable : "32", value : "1.1271"},
+{group : "P", variable : "32", value : "1.9511"},
+{group : "G", variable : "33", value : "1.2472"},
+{group : "K", variable : "33", value : "1.046"},
+{group : "P", variable : "33", value : "1.7714"},
+{group : "R", variable : "33", value : "1.0419"},
+{group : "A", variable : "34", value : "1.2862"},
+{group : "D", variable : "34", value : "1.3704"},
+{group : "E", variable : "34", value : "1.468"},
+{group : "F", variable : "34", value : "1.235"},
+{group : "H", variable : "34", value : "1.0294"},
+{group : "I", variable : "34", value : "2.002"},
+{group : "K", variable : "34", value : "1.2002"},
+{group : "L", variable : "34", value : "1.3813"},
+{group : "M", variable : "34", value : "1.2461"},
+{group : "P", variable : "34", value : "2.3091"},
+{group : "Q", variable : "34", value : "1.2122"},
+{group : "R", variable : "34", value : "1.2856"},
+{group : "S", variable : "34", value : "1.3285"},
+{group : "T", variable : "34", value : "1.7519"},
+{group : "V", variable : "34", value : "1.9182"},
+{group : "W", variable : "34", value : "1.4955"},
+{group : "Y", variable : "34", value : "1.402"},
+{group : "A", variable : "35", value : "1.8654"},
+{group : "C", variable : "35", value : "1.2124"},
+{group : "D", variable : "35", value : "2.5192"},
+{group : "E", variable : "35", value : "2.3132"},
+{group : "G", variable : "35", value : "2.5215"},
+{group : "H", variable : "35", value : "1.7081"},
+{group : "K", variable : "35", value : "2.0163"},
+{group : "M", variable : "35", value : "1.1363"},
+{group : "N", variable : "35", value : "2.285"},
+{group : "P", variable : "35", value : "2.5186"},
+{group : "Q", variable : "35", value : "2.0428"},
+{group : "R", variable : "35", value : "2.0503"},
+{group : "S", variable : "35", value : "2.1929"},
+{group : "T", variable : "35", value : "1.8667"},
+{group : "E", variable : "36", value : "1.1433"},
+{group : "G", variable : "36", value : "1.0642"},
+{group : "M", variable : "36", value : "1.0264"},
+{group : "V", variable : "36", value : "1.0033"},
+{group : "D", variable : "37", value : "1.6318"},
+{group : "E", variable : "37", value : "1.3944"},
+{group : "F", variable : "37", value : "1.2327"},
+{group : "G", variable : "37", value : "1.3127"},
+{group : "H", variable : "37", value : "1.3214"},
+{group : "L", variable : "37", value : "1.1227"},
+{group : "M", variable : "37", value : "1.0108"},
+{group : "N", variable : "37", value : "1.4363"},
+{group : "Q", variable : "37", value : "1.0746"},
+{group : "R", variable : "37", value : "1.1136"},
+{group : "S", variable : "37", value : "1.1607"},
+{group : "T", variable : "37", value : "1.1697"},
+{group : "W", variable : "37", value : "1.2902"},
+{group : "Y", variable : "37", value : "1.2288"},
+{group : "P", variable : "39", value : "2.1947"},
+{group : "D", variable : "40", value : "2.3774"},
+{group : "E", variable : "40", value : "1.4345"},
+{group : "G", variable : "40", value : "1.4206"},
+{group : "H", variable : "40", value : "1.2264"},
+{group : "K", variable : "40", value : "1.0925"},
+{group : "N", variable : "40", value : "1.8707"},
+{group : "P", variable : "40", value : "1.9033"},
+{group : "G", variable : "41", value : "1.1303"},
+{group : "P", variable : "41", value : "2.4904"},
+{group : "A", variable : "42", value : "1.905"},
+{group : "C", variable : "42", value : "1.0699"},
+{group : "D", variable : "42", value : "2.4431"},
+{group : "E", variable : "42", value : "2.4321"},
+{group : "G", variable : "42", value : "2.43"},
+{group : "H", variable : "42", value : "2.2588"},
+{group : "K", variable : "42", value : "2.3231"},
+{group : "N", variable : "42", value : "2.4604"},
+{group : "P", variable : "42", value : "2.036"},
+{group : "Q", variable : "42", value : "2.4441"},
+{group : "R", variable : "42", value : "2.3364"},
+{group : "S", variable : "42", value : "2.2928"},
+{group : "T", variable : "42", value : "2.0015"},
+{group : "W", variable : "42", value : "1.382"},
+{group : "Y", variable : "42", value : "1.402"},
+{group : "A", variable : "43", value : "1.4446"},
+{group : "D", variable : "43", value : "2.2908"},
+{group : "E", variable : "43", value : "1.4292"},
+{group : "G", variable : "43", value : "2.4432"},
+{group : "H", variable : "43", value : "1.3081"},
+{group : "K", variable : "43", value : "1.8213"},
+{group : "N", variable : "43", value : "2.1026"},
+{group : "P", variable : "43", value : "3.1573"},
+{group : "Q", variable : "43", value : "1.4674"},
+{group : "R", variable : "43", value : "1.7544"},
+{group : "S", variable : "43", value : "1.6015"},
+{group : "T", variable : "43", value : "1.2029"},
+{group : "A", variable : "44", value : "1.0773"},
+{group : "D", variable : "44", value : "1.7352"},
+{group : "E", variable : "44", value : "1.5379"},
+{group : "G", variable : "44", value : "1.3726"},
+{group : "K", variable : "44", value : "1.3179"},
+{group : "N", variable : "44", value : "1.464"},
+{group : "P", variable : "44", value : "1.559"},
+{group : "Q", variable : "44", value : "1.2421"},
+{group : "R", variable : "44", value : "1.169"},
+{group : "S", variable : "44", value : "1.512"},
+{group : "T", variable : "44", value : "1.5802"},
+{group : "V", variable : "44", value : "1.0992"},
+{group : "P", variable : "45", value : "2.0556"},
+{group : "A", variable : "46", value : "1.1664"},
+{group : "I", variable : "46", value : "1.5639"},
+{group : "K", variable : "46", value : "1.1791"},
+{group : "L", variable : "46", value : "1.0447"},
+{group : "P", variable : "46", value : "1.9548"},
+{group : "Q", variable : "46", value : "1.0693"},
+{group : "R", variable : "46", value : "1.2415"},
+{group : "S", variable : "46", value : "1.133"},
+{group : "T", variable : "46", value : "1.482"},
+{group : "V", variable : "46", value : "1.6024"},
+{group : "W", variable : "46", value : "1.1507"},
+{group : "Y", variable : "46", value : "1.0568"},
+{group : "P", variable : "47", value : "2.1453"},
+{group : "A", variable : "49", value : "2.0903"},
+{group : "C", variable : "49", value : "1.4085"},
+{group : "D", variable : "49", value : "1.8026"},
+{group : "E", variable : "49", value : "2.1139"},
+{group : "F", variable : "49", value : "1.6496"},
+{group : "G", variable : "49", value : "2.2014"},
+{group : "H", variable : "49", value : "2.2672"},
+{group : "I", variable : "49", value : "1.184"},
+{group : "K", variable : "49", value : "2.1782"},
+{group : "M", variable : "49", value : "1.1001"},
+{group : "N", variable : "49", value : "2.1756"},
+{group : "P", variable : "49", value : "2.1104"},
+{group : "Q", variable : "49", value : "2.1189"},
+{group : "R", variable : "49", value : "2.2742"},
+{group : "S", variable : "49", value : "2.1871"},
+{group : "T", variable : "49", value : "2.007"},
+{group : "V", variable : "49", value : "1.5373"},
+{group : "W", variable : "49", value : "2.2386"},
+{group : "Y", variable : "49", value : "2.1352"},
+{group : "A", variable : "51", value : "1.0678"},
+{group : "F", variable : "51", value : "1.3535"},
+{group : "G", variable : "51", value : "1.4522"},
+{group : "H", variable : "51", value : "1.2297"},
+{group : "I", variable : "51", value : "1.279"},
+{group : "K", variable : "51", value : "1.4949"},
+{group : "L", variable : "51", value : "1.2815"},
+{group : "M", variable : "51", value : "1.4186"},
+{group : "P", variable : "51", value : "1.0191"},
+{group : "Q", variable : "51", value : "1.3476"},
+{group : "R", variable : "51", value : "1.4394"},
+{group : "T", variable : "51", value : "1.2671"},
+{group : "V", variable : "51", value : "1.3355"},
+{group : "W", variable : "51", value : "1.1014"},
+{group : "Y", variable : "51", value : "1.3814"},
+{group : "P", variable : "52", value : "1.1191"},
+{group : "D", variable : "53", value : "1.1844"},
+{group : "P", variable : "53", value : "2.3874"},
+{group : "T", variable : "53", value : "1.042"},
+{group : "V", variable : "53", value : "1.0198"},
+{group : "A", variable : "54", value : "1.2218"},
+{group : "C", variable : "54", value : "1.0377"},
+{group : "D", variable : "54", value : "1.8756"},
+{group : "E", variable : "54", value : "1.6741"},
+{group : "F", variable : "54", value : "1.478"},
+{group : "G", variable : "54", value : "1.317"},
+{group : "H", variable : "54", value : "1.3269"},
+{group : "I", variable : "54", value : "1.4486"},
+{group : "K", variable : "54", value : "1.0672"},
+{group : "L", variable : "54", value : "1.437"},
+{group : "M", variable : "54", value : "1.2261"},
+{group : "N", variable : "54", value : "1.3411"},
+{group : "P", variable : "54", value : "1.6433"},
+{group : "Q", variable : "54", value : "1.0848"},
+{group : "R", variable : "54", value : "1.0835"},
+{group : "V", variable : "54", value : "1.4127"},
+{group : "W", variable : "54", value : "1.9204"},
+{group : "Y", variable : "54", value : "1.6782"},
+{group : "A", variable : "55", value : "2.4944"},
+{group : "C", variable : "55", value : "1.6071"},
+{group : "D", variable : "55", value : "2.866"},
+{group : "E", variable : "55", value : "2.7442"},
+{group : "F", variable : "55", value : "1.4605"},
+{group : "G", variable : "55", value : "2.5809"},
+{group : "H", variable : "55", value : "2.9144"},
+{group : "I", variable : "55", value : "1.1666"},
+{group : "K", variable : "55", value : "2.9513"},
+{group : "M", variable : "55", value : "1.1183"},
+{group : "N", variable : "55", value : "3.0466"},
+{group : "P", variable : "55", value : "2.9518"},
+{group : "Q", variable : "55", value : "2.8439"},
+{group : "R", variable : "55", value : "3.0064"},
+{group : "S", variable : "55", value : "2.8817"},
+{group : "T", variable : "55", value : "2.6151"},
+{group : "V", variable : "55", value : "1.6021"},
+{group : "W", variable : "55", value : "2.2646"},
+{group : "Y", variable : "55", value : "2.1809"},
+{group : "P", variable : "56", value : "2.3077"},
+{group : "G", variable : "57", value : "1.2868"},
+{group : "I", variable : "57", value : "1.0635"},
+{group : "K", variable : "57", value : "1.4277"},
+{group : "L", variable : "57", value : "1.0556"},
+{group : "P", variable : "57", value : "3.1388"},
+{group : "R", variable : "57", value : "1.4372"},
+{group : "T", variable : "57", value : "1.0062"},
+{group : "V", variable : "57", value : "1.1807"},
+{group : "A", variable : "58", value : "1.5865"},
+{group : "D", variable : "58", value : "1.7464"},
+{group : "E", variable : "58", value : "1.7887"},
+{group : "G", variable : "58", value : "1.6551"},
+{group : "I", variable : "58", value : "1.654"},
+{group : "K", variable : "58", value : "1.9174"},
+{group : "L", variable : "58", value : "1.5628"},
+{group : "M", variable : "58", value : "1.5174"},
+{group : "N", variable : "58", value : "1.6479"},
+{group : "P", variable : "58", value : "1.8865"},
+{group : "Q", variable : "58", value : "1.842"},
+{group : "R", variable : "58", value : "1.6877"},
+{group : "S", variable : "58", value : "1.9141"},
+{group : "T", variable : "58", value : "1.8394"},
+{group : "V", variable : "58", value : "1.5935"},
+{group : "I", variable : "59", value : "1.5687"},
+{group : "P", variable : "59", value : "2.0707"},
+{group : "T", variable : "59", value : "1.3128"},
+{group : "V", variable : "59", value : "1.5131"},
+{group : "A", variable : "60", value : "2.3771"},
+{group : "C", variable : "60", value : "1.847"},
+{group : "D", variable : "60", value : "3.1686"},
+{group : "E", variable : "60", value : "3.2529"},
+{group : "F", variable : "60", value : "1.7116"},
+{group : "G", variable : "60", value : "3.1617"},
+{group : "H", variable : "60", value : "2.9261"},
+{group : "K", variable : "60", value : "2.8891"},
+{group : "L", variable : "60", value : "1.0094"},
+{group : "M", variable : "60", value : "1.58"},
+{group : "N", variable : "60", value : "3.0717"},
+{group : "P", variable : "60", value : "2.8846"},
+{group : "Q", variable : "60", value : "2.9582"},
+{group : "R", variable : "60", value : "2.9601"},
+{group : "S", variable : "60", value : "3.0689"},
+{group : "T", variable : "60", value : "2.6459"},
+{group : "W", variable : "60", value : "2.3136"},
+{group : "Y", variable : "60", value : "2.2254"},
+{group : "P", variable : "61", value : "1.86"},
+{group : "P", variable : "63", value : "1.5437"},
+{group : "V", variable : "63", value : "1.0685"},
+{group : "D", variable : "64", value : "1.4132"},
+{group : "E", variable : "64", value : "1.7419"},
+{group : "F", variable : "64", value : "1.4289"},
+{group : "G", variable : "64", value : "1.0753"},
+{group : "H", variable : "64", value : "1.4639"},
+{group : "I", variable : "64", value : "1.5207"},
+{group : "K", variable : "64", value : "1.676"},
+{group : "L", variable : "64", value : "1.6985"},
+{group : "M", variable : "64", value : "1.0791"},
+{group : "N", variable : "64", value : "1.6773"},
+{group : "P", variable : "64", value : "2.326"},
+{group : "Q", variable : "64", value : "1.167"},
+{group : "R", variable : "64", value : "1.5805"},
+{group : "V", variable : "64", value : "1.5619"},
+{group : "W", variable : "64", value : "1.061"},
+{group : "Y", variable : "64", value : "1.4804"},
+{group : "D", variable : "65", value : "1.225"},
+{group : "G", variable : "65", value : "1.5645"},
+{group : "N", variable : "65", value : "1.1288"},
+{group : "P", variable : "65", value : "1.7721"},
+{group : "A", variable : "66", value : "2.5387"},
+{group : "C", variable : "66", value : "1.5839"},
+{group : "D", variable : "66", value : "3.2005"},
+{group : "E", variable : "66", value : "3.1151"},
+{group : "F", variable : "66", value : "1.2606"},
+{group : "G", variable : "66", value : "2.8485"},
+{group : "H", variable : "66", value : "2.9516"},
+{group : "K", variable : "66", value : "2.9327"},
+{group : "N", variable : "66", value : "3.053"},
+{group : "P", variable : "66", value : "2.7365"},
+{group : "Q", variable : "66", value : "3.0155"},
+{group : "R", variable : "66", value : "2.948"},
+{group : "S", variable : "66", value : "2.9051"},
+{group : "T", variable : "66", value : "2.5252"},
+{group : "V", variable : "66", value : "1.1996"},
+{group : "W", variable : "66", value : "2.1268"},
+{group : "Y", variable : "66", value : "2.0705"},
+{group : "D", variable : "67", value : "1.0627"},
+{group : "G", variable : "67", value : "1.0571"},
+{group : "P", variable : "67", value : "2.1573"},
+{group : "A", variable : "68", value : "2.2144"},
+{group : "C", variable : "68", value : "1.2288"},
+{group : "D", variable : "68", value : "2.9258"},
+{group : "E", variable : "68", value : "2.8014"},
+{group : "F", variable : "68", value : "1.4354"},
+{group : "G", variable : "68", value : "2.6471"},
+{group : "H", variable : "68", value : "2.6472"},
+{group : "K", variable : "68", value : "2.5804"},
+{group : "M", variable : "68", value : "1.0755"},
+{group : "N", variable : "68", value : "2.8005"},
+{group : "P", variable : "68", value : "2.7406"},
+{group : "Q", variable : "68", value : "2.7552"},
+{group : "R", variable : "68", value : "2.7016"},
+{group : "S", variable : "68", value : "2.6657"},
+{group : "T", variable : "68", value : "2.7026"},
+{group : "V", variable : "68", value : "1.3606"},
+{group : "W", variable : "68", value : "1.7651"},
+{group : "Y", variable : "68", value : "1.9535"},
+{group : "D", variable : "69", value : "1.435"},
+{group : "G", variable : "69", value : "1.6689"},
+{group : "K", variable : "69", value : "1.0493"},
+{group : "N", variable : "69", value : "1.3826"},
+{group : "P", variable : "69", value : "2.5474"},
+{group : "S", variable : "69", value : "1.0377"},
+{group : "A", variable : "70", value : "1.2931"},
+{group : "D", variable : "70", value : "2.0274"},
+{group : "E", variable : "70", value : "1.3496"},
+{group : "G", variable : "70", value : "2.022"},
+{group : "H", variable : "70", value : "1.0554"},
+{group : "K", variable : "70", value : "1.1275"},
+{group : "N", variable : "70", value : "1.5745"},
+{group : "P", variable : "70", value : "1.6733"},
+{group : "Q", variable : "70", value : "1.0311"},
+{group : "R", variable : "70", value : "1.1966"},
+{group : "S", variable : "70", value : "1.4684"},
+{group : "T", variable : "70", value : "1.1451"},
+{group : "P", variable : "71", value : "1.3788"},
+{group : "D", variable : "72", value : "1.0088"},
+{group : "G", variable : "72", value : "1.1154"},
+
+]
+
+  // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
+  var myGroups = d3.map(data, function(d){return d.group;}).keys()
+  var myVars = d3.map(data, function(d){return d.variable;}).keys()
+
+  // Build X scales and axis:
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(myGroups)
+    .padding(0.05);
+  svg.append("g")
+    .style("font-size", 10)
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).tickSize(0))
+    .select(".domain").remove()
+
+  // Build Y scales and axis:
+  var y = d3.scaleBand()
+    .range([ height, 0 ])
+    .domain(myVars)
+    .padding(0.05);
+  svg.append("g")
+    .style("font-size", 10)
+    .call(d3.axisLeft(y).tickSize(0))
+    .select(".domain").remove()
+
+  // Build color scale
+  var myColor = d3.scaleSequential()
+    .interpolator(d3.interpolateMagma)
+    .domain([1.0033, 3.7124])
+
+  // create a tooltip
+  var tooltip = d3.select("#d3_heatmap")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+    .style("position", "absolute") // SHOW TOOLTIP CORRECTLY WHEN HOVERING
+
+  // Three function that change the tooltip when user hover / move / leave a cell
+  var mouseover = function(d) {
+    tooltip
+      .style("opacity", 0.8)
+    d3.select(this)
+      .style("stroke", "red")
+      .style("opacity", 0.8)
+  }
+  var mousemove = function(d) {
+    tooltip
+      .html("Exact value: " + d.value)
+      .style("left", (d3.mouse(this)[0]+70) + "px")
+      .style("top", (d3.mouse(this)[1]) + "px")
+  }
+  var mouseleave = function(d) {
+    tooltip
+      .style("opacity", 0)
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+  }
+
+  // add the squares
+  svg.selectAll()
+    .data(data, function(d) {return d.group+':'+d.variable;})
+    .enter()
+    .append("rect")
+      .attr("x", function(d) { return x(d.group) })
+      .attr("y", function(d) { return y(d.variable) })
+      .attr("rx", 4)
+      .attr("ry", 4)
+      .attr("width", x.bandwidth() )
+      .attr("height", y.bandwidth() )
+      .style("fill", function(d) { return myColor(d.value)} )
+      .style("stroke-width", 4)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseleave", mouseleave)
+//})
+
+// Add title to graph
+svg.append("text")
+        .attr("x", 0)
+        .attr("y", -50)
+        .attr("text-anchor", "left")
+        .style("font-size", "22px")
+        .text("Matrix - D3blocks");
+
+// Add subtitle to graph
+svg.append("text")
+        .attr("x", 0)
+        .attr("y", -20)
+        .attr("text-anchor", "left")
+        .style("font-size", "14px")
+        .style("fill", "grey")
+        .style("max-width", 400)
+        .text("");
+
+
+        // SAVE CHART TO SVG
+        document.getElementById('saveButton').addEventListener('click', function () {
+            var svgData = document.querySelector('svg').outerHTML;
+            var blob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = 'Matrix - D3blocks.svg';
+            link.click();
+        });
+        
+
+</script>

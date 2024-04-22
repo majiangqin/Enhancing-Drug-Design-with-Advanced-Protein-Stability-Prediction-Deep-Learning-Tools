@@ -1,0 +1,452 @@
+<!--
+    Thank you for inspecting this page! If you find some issues, let me know!
+    Library     : pip install d3blocks
+    Author      : E.Taskesen
+    Mail        : erdogant@gmail.com
+    Github      : https://github.com/d3blocks/d3blocks
+	References  : d3-graph-gallery.com
+ -->
+
+<script async src='https://media.ethicalads.io/media/client/ethicalads.min.js'></script>
+<div data-ea-publisher='erdogantgithubio' data-ea-type='text' data-ea-style='stickybox'></div>
+
+<!-- Create save button -->
+
+<div style="max-width:450px;">
+    <center><button id="saveButton">Save</button></center>
+</div>
+
+
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!-- Load d3.js -->
+<script src="d3.v4.js"></script>
+<!-- Load color palettes -->
+<script src="d3.scale.chromatic.v1.min.js"></script>
+
+<!-- Create a div where the graph will take place -->
+<div id="d3_heatmap"></div>
+
+<script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 80, right: 25, bottom: 30, left: 40},
+  width = 450 - margin.left - margin.right,
+  height = 590 - margin.top - margin.bottom;
+
+// append the svg object to the body of the page
+var svg = d3.select("#d3_heatmap")
+.append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+.append("g")
+  .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+//Read the data
+//d3.csv("2A36_matrix_T.html", function(data) {
+
+//Store data in variable
+var data = 
+[
+	{group : "D", variable : "2", value : "2.0912"},
+{group : "E", variable : "2", value : "1.7929"},
+{group : "H", variable : "2", value : "1.3532"},
+{group : "K", variable : "2", value : "1.678"},
+{group : "N", variable : "2", value : "1.7101"},
+{group : "P", variable : "2", value : "1.8515"},
+{group : "Q", variable : "2", value : "1.7327"},
+{group : "R", variable : "2", value : "1.5935"},
+{group : "S", variable : "2", value : "1.1906"},
+{group : "T", variable : "2", value : "1.1329"},
+{group : "A", variable : "3", value : "1.1255"},
+{group : "D", variable : "3", value : "1.5002"},
+{group : "E", variable : "3", value : "1.0359"},
+{group : "G", variable : "3", value : "1.582"},
+{group : "K", variable : "3", value : "1.0234"},
+{group : "N", variable : "3", value : "1.3782"},
+{group : "P", variable : "3", value : "1.6888"},
+{group : "Q", variable : "3", value : "1.0414"},
+{group : "S", variable : "3", value : "1.096"},
+{group : "D", variable : "4", value : "2.9399"},
+{group : "E", variable : "4", value : "2.8373"},
+{group : "F", variable : "4", value : "1.8006"},
+{group : "G", variable : "4", value : "1.5743"},
+{group : "H", variable : "4", value : "2.6548"},
+{group : "I", variable : "4", value : "1.3411"},
+{group : "K", variable : "4", value : "2.7797"},
+{group : "L", variable : "4", value : "1.856"},
+{group : "M", variable : "4", value : "1.7628"},
+{group : "N", variable : "4", value : "2.7817"},
+{group : "P", variable : "4", value : "2.1261"},
+{group : "Q", variable : "4", value : "2.5994"},
+{group : "R", variable : "4", value : "2.6784"},
+{group : "S", variable : "4", value : "1.6195"},
+{group : "T", variable : "4", value : "1.646"},
+{group : "W", variable : "4", value : "2.0888"},
+{group : "Y", variable : "4", value : "2.1963"},
+{group : "D", variable : "5", value : "1.2188"},
+{group : "P", variable : "5", value : "1.035"},
+{group : "P", variable : "6", value : "1.6834"},
+{group : "G", variable : "7", value : "1.1212"},
+{group : "K", variable : "7", value : "1.1305"},
+{group : "P", variable : "7", value : "1.1197"},
+{group : "R", variable : "7", value : "1.0776"},
+{group : "D", variable : "8", value : "1.5733"},
+{group : "E", variable : "8", value : "1.7769"},
+{group : "G", variable : "8", value : "1.0372"},
+{group : "H", variable : "8", value : "1.1397"},
+{group : "K", variable : "8", value : "1.5229"},
+{group : "L", variable : "8", value : "1.0123"},
+{group : "M", variable : "8", value : "1.0192"},
+{group : "N", variable : "8", value : "1.5935"},
+{group : "P", variable : "8", value : "1.4377"},
+{group : "Q", variable : "8", value : "1.4865"},
+{group : "R", variable : "8", value : "1.4171"},
+{group : "S", variable : "8", value : "1.2044"},
+{group : "T", variable : "8", value : "1.2101"},
+{group : "D", variable : "10", value : "1.0619"},
+{group : "E", variable : "10", value : "1.1359"},
+{group : "P", variable : "12", value : "1.0024"},
+{group : "P", variable : "15", value : "1.1301"},
+{group : "A", variable : "16", value : "1.2463"},
+{group : "D", variable : "16", value : "1.848"},
+{group : "E", variable : "16", value : "1.6258"},
+{group : "G", variable : "16", value : "1.7992"},
+{group : "H", variable : "16", value : "1.525"},
+{group : "K", variable : "16", value : "1.657"},
+{group : "N", variable : "16", value : "1.8209"},
+{group : "P", variable : "16", value : "1.5868"},
+{group : "Q", variable : "16", value : "1.62"},
+{group : "R", variable : "16", value : "1.5753"},
+{group : "S", variable : "16", value : "1.5574"},
+{group : "T", variable : "16", value : "1.3041"},
+{group : "P", variable : "17", value : "1.1889"},
+{group : "A", variable : "18", value : "1.3685"},
+{group : "D", variable : "18", value : "2.5919"},
+{group : "E", variable : "18", value : "2.538"},
+{group : "G", variable : "18", value : "1.6969"},
+{group : "H", variable : "18", value : "2.1824"},
+{group : "K", variable : "18", value : "2.2665"},
+{group : "L", variable : "18", value : "1.1323"},
+{group : "N", variable : "18", value : "2.3389"},
+{group : "P", variable : "18", value : "1.7062"},
+{group : "Q", variable : "18", value : "2.2543"},
+{group : "R", variable : "18", value : "2.1473"},
+{group : "S", variable : "18", value : "1.7196"},
+{group : "T", variable : "18", value : "1.8059"},
+{group : "W", variable : "18", value : "1.3434"},
+{group : "Y", variable : "18", value : "1.3903"},
+{group : "P", variable : "19", value : "1.2252"},
+{group : "D", variable : "20", value : "1.0192"},
+{group : "F", variable : "22", value : "1.9027"},
+{group : "G", variable : "22", value : "2.0497"},
+{group : "H", variable : "22", value : "1.3142"},
+{group : "I", variable : "22", value : "1.6377"},
+{group : "K", variable : "22", value : "2.3441"},
+{group : "L", variable : "22", value : "1.4513"},
+{group : "N", variable : "22", value : "1.8187"},
+{group : "P", variable : "22", value : "3.6661"},
+{group : "R", variable : "22", value : "2.4664"},
+{group : "V", variable : "22", value : "1.3773"},
+{group : "W", variable : "22", value : "1.4841"},
+{group : "Y", variable : "22", value : "1.8284"},
+{group : "A", variable : "24", value : "1.9015"},
+{group : "D", variable : "24", value : "3.1964"},
+{group : "E", variable : "24", value : "2.9067"},
+{group : "F", variable : "24", value : "1.0141"},
+{group : "G", variable : "24", value : "2.3451"},
+{group : "H", variable : "24", value : "2.5977"},
+{group : "K", variable : "24", value : "2.7007"},
+{group : "N", variable : "24", value : "2.8464"},
+{group : "P", variable : "24", value : "2.7596"},
+{group : "Q", variable : "24", value : "2.8084"},
+{group : "R", variable : "24", value : "2.6386"},
+{group : "S", variable : "24", value : "2.7438"},
+{group : "T", variable : "24", value : "2.3715"},
+{group : "W", variable : "24", value : "1.7102"},
+{group : "Y", variable : "24", value : "1.7815"},
+{group : "D", variable : "25", value : "1.6314"},
+{group : "E", variable : "25", value : "1.1916"},
+{group : "G", variable : "25", value : "1.3629"},
+{group : "P", variable : "25", value : "1.3982"},
+{group : "A", variable : "26", value : "1.5445"},
+{group : "D", variable : "26", value : "2.5272"},
+{group : "E", variable : "26", value : "2.2332"},
+{group : "G", variable : "26", value : "2.1987"},
+{group : "H", variable : "26", value : "1.5669"},
+{group : "K", variable : "26", value : "1.6413"},
+{group : "N", variable : "26", value : "2.1727"},
+{group : "P", variable : "26", value : "2.1852"},
+{group : "Q", variable : "26", value : "1.8572"},
+{group : "R", variable : "26", value : "1.6351"},
+{group : "S", variable : "26", value : "1.8781"},
+{group : "T", variable : "26", value : "1.6256"},
+{group : "D", variable : "27", value : "1.3303"},
+{group : "G", variable : "27", value : "1.1197"},
+{group : "P", variable : "27", value : "1.3986"},
+{group : "P", variable : "28", value : "1.0761"},
+{group : "P", variable : "34", value : "1.1381"},
+{group : "A", variable : "35", value : "1.2847"},
+{group : "D", variable : "35", value : "1.9588"},
+{group : "E", variable : "35", value : "1.7541"},
+{group : "G", variable : "35", value : "1.5713"},
+{group : "P", variable : "35", value : "1.9614"},
+{group : "V", variable : "35", value : "1.0281"},
+{group : "A", variable : "36", value : "1.3061"},
+{group : "D", variable : "36", value : "2.3617"},
+{group : "E", variable : "36", value : "2.5347"},
+{group : "G", variable : "36", value : "1.7727"},
+{group : "H", variable : "36", value : "1.2943"},
+{group : "K", variable : "36", value : "1.7934"},
+{group : "M", variable : "36", value : "1.0301"},
+{group : "N", variable : "36", value : "1.9187"},
+{group : "P", variable : "36", value : "1.7396"},
+{group : "Q", variable : "36", value : "1.9609"},
+{group : "R", variable : "36", value : "1.7864"},
+{group : "S", variable : "36", value : "1.7014"},
+{group : "T", variable : "36", value : "1.544"},
+{group : "A", variable : "37", value : "1.2449"},
+{group : "D", variable : "37", value : "2.0766"},
+{group : "E", variable : "37", value : "1.6502"},
+{group : "G", variable : "37", value : "1.8906"},
+{group : "N", variable : "37", value : "1.1619"},
+{group : "P", variable : "37", value : "2.0723"},
+{group : "Q", variable : "37", value : "1.1119"},
+{group : "S", variable : "37", value : "1.0573"},
+{group : "D", variable : "38", value : "4.2186"},
+{group : "E", variable : "38", value : "4.0588"},
+{group : "F", variable : "38", value : "2.1728"},
+{group : "G", variable : "38", value : "1.5203"},
+{group : "H", variable : "38", value : "3.4756"},
+{group : "I", variable : "38", value : "1.6446"},
+{group : "K", variable : "38", value : "4.1232"},
+{group : "L", variable : "38", value : "1.9987"},
+{group : "M", variable : "38", value : "2.1037"},
+{group : "N", variable : "38", value : "3.6663"},
+{group : "P", variable : "38", value : "4.2442"},
+{group : "Q", variable : "38", value : "3.8341"},
+{group : "R", variable : "38", value : "3.964"},
+{group : "S", variable : "38", value : "2.4934"},
+{group : "T", variable : "38", value : "2.6427"},
+{group : "W", variable : "38", value : "2.7297"},
+{group : "Y", variable : "38", value : "2.7389"},
+{group : "G", variable : "39", value : "1.0037"},
+{group : "P", variable : "39", value : "1.703"},
+{group : "D", variable : "40", value : "1.3161"},
+{group : "E", variable : "40", value : "1.065"},
+{group : "P", variable : "40", value : "1.2503"},
+{group : "D", variable : "42", value : "1.0829"},
+{group : "E", variable : "42", value : "1.1134"},
+{group : "F", variable : "42", value : "1.1341"},
+{group : "I", variable : "42", value : "1.6688"},
+{group : "K", variable : "42", value : "1.0033"},
+{group : "L", variable : "42", value : "1.2643"},
+{group : "M", variable : "42", value : "1.1207"},
+{group : "P", variable : "42", value : "1.8689"},
+{group : "Q", variable : "42", value : "1.0828"},
+{group : "R", variable : "42", value : "1.0255"},
+{group : "S", variable : "42", value : "1.0189"},
+{group : "T", variable : "42", value : "1.3163"},
+{group : "V", variable : "42", value : "1.5752"},
+{group : "W", variable : "42", value : "1.3059"},
+{group : "Y", variable : "42", value : "1.2073"},
+{group : "D", variable : "43", value : "1.3651"},
+{group : "E", variable : "43", value : "1.0195"},
+{group : "G", variable : "43", value : "1.0637"},
+{group : "P", variable : "43", value : "1.7662"},
+{group : "A", variable : "45", value : "1.4704"},
+{group : "D", variable : "45", value : "2.4227"},
+{group : "E", variable : "45", value : "2.1892"},
+{group : "H", variable : "45", value : "1.7364"},
+{group : "I", variable : "45", value : "1.2524"},
+{group : "K", variable : "45", value : "2.3061"},
+{group : "L", variable : "45", value : "1.3561"},
+{group : "M", variable : "45", value : "1.1984"},
+{group : "N", variable : "45", value : "2.1801"},
+{group : "P", variable : "45", value : "1.9837"},
+{group : "Q", variable : "45", value : "2.0178"},
+{group : "R", variable : "45", value : "2.1559"},
+{group : "S", variable : "45", value : "1.8273"},
+{group : "T", variable : "45", value : "1.9188"},
+{group : "V", variable : "45", value : "1.1504"},
+{group : "A", variable : "46", value : "1.021"},
+{group : "D", variable : "46", value : "1.8432"},
+{group : "E", variable : "46", value : "1.4918"},
+{group : "G", variable : "46", value : "1.5585"},
+{group : "P", variable : "46", value : "1.8986"},
+{group : "A", variable : "47", value : "1.8072"},
+{group : "C", variable : "47", value : "1.3425"},
+{group : "D", variable : "47", value : "2.843"},
+{group : "E", variable : "47", value : "2.8497"},
+{group : "F", variable : "47", value : "1.8153"},
+{group : "G", variable : "47", value : "2.6515"},
+{group : "H", variable : "47", value : "2.7574"},
+{group : "K", variable : "47", value : "2.8647"},
+{group : "L", variable : "47", value : "1.2175"},
+{group : "M", variable : "47", value : "1.8146"},
+{group : "N", variable : "47", value : "2.9135"},
+{group : "P", variable : "47", value : "2.5345"},
+{group : "Q", variable : "47", value : "2.9079"},
+{group : "R", variable : "47", value : "2.8214"},
+{group : "S", variable : "47", value : "2.6056"},
+{group : "T", variable : "47", value : "1.9464"},
+{group : "W", variable : "47", value : "2.224"},
+{group : "Y", variable : "47", value : "2.1856"},
+{group : "D", variable : "48", value : "1.3234"},
+{group : "E", variable : "48", value : "1.2793"},
+{group : "G", variable : "48", value : "1.6339"},
+{group : "I", variable : "48", value : "1.655"},
+{group : "M", variable : "48", value : "1.1841"},
+{group : "Q", variable : "48", value : "1.0247"},
+{group : "S", variable : "48", value : "1.1686"},
+{group : "T", variable : "48", value : "1.7692"},
+{group : "V", variable : "48", value : "1.4499"},
+{group : "D", variable : "49", value : "1.1014"},
+{group : "D", variable : "51", value : "2.2143"},
+{group : "E", variable : "51", value : "2.2482"},
+{group : "G", variable : "51", value : "1.0646"},
+{group : "K", variable : "51", value : "1.2596"},
+{group : "N", variable : "51", value : "1.4147"},
+{group : "P", variable : "51", value : "2.3215"},
+{group : "Q", variable : "51", value : "1.4417"},
+{group : "R", variable : "51", value : "1.1498"},
+{group : "S", variable : "51", value : "1.1108"},
+{group : "T", variable : "51", value : "1.1537"},
+{group : "D", variable : "52", value : "1.7906"},
+{group : "E", variable : "52", value : "1.6875"},
+{group : "G", variable : "52", value : "1.3045"},
+{group : "H", variable : "52", value : "1.3184"},
+{group : "K", variable : "52", value : "1.5088"},
+{group : "N", variable : "52", value : "1.6397"},
+{group : "P", variable : "52", value : "1.6249"},
+{group : "Q", variable : "52", value : "1.3803"},
+{group : "R", variable : "52", value : "1.5028"},
+{group : "S", variable : "52", value : "1.0206"},
+{group : "D", variable : "53", value : "1.1313"},
+{group : "G", variable : "53", value : "1.1497"},
+{group : "K", variable : "53", value : "1.2312"},
+{group : "N", variable : "53", value : "1.2769"},
+{group : "P", variable : "53", value : "1.7337"},
+{group : "R", variable : "53", value : "1.1991"},
+
+]
+
+  // Labels of row and columns -> unique identifier of the column called 'group' and 'variable'
+  var myGroups = d3.map(data, function(d){return d.group;}).keys()
+  var myVars = d3.map(data, function(d){return d.variable;}).keys()
+
+  // Build X scales and axis:
+  var x = d3.scaleBand()
+    .range([ 0, width ])
+    .domain(myGroups)
+    .padding(0.05);
+  svg.append("g")
+    .style("font-size", 10)
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x).tickSize(0))
+    .select(".domain").remove()
+
+  // Build Y scales and axis:
+  var y = d3.scaleBand()
+    .range([ height, 0 ])
+    .domain(myVars)
+    .padding(0.05);
+  svg.append("g")
+    .style("font-size", 10)
+    .call(d3.axisLeft(y).tickSize(0))
+    .select(".domain").remove()
+
+  // Build color scale
+  var myColor = d3.scaleSequential()
+    .interpolator(d3.interpolateMagma)
+    .domain([1.0024, 4.2442])
+
+  // create a tooltip
+  var tooltip = d3.select("#d3_heatmap")
+    .append("div")
+    .style("opacity", 0)
+    .attr("class", "tooltip")
+    .style("background-color", "white")
+    .style("border", "solid")
+    .style("border-width", "2px")
+    .style("border-radius", "5px")
+    .style("padding", "5px")
+    .style("position", "absolute") // SHOW TOOLTIP CORRECTLY WHEN HOVERING
+
+  // Three function that change the tooltip when user hover / move / leave a cell
+  var mouseover = function(d) {
+    tooltip
+      .style("opacity", 0.8)
+    d3.select(this)
+      .style("stroke", "red")
+      .style("opacity", 0.8)
+  }
+  var mousemove = function(d) {
+    tooltip
+      .html("Exact value: " + d.value)
+      .style("left", (d3.mouse(this)[0]+70) + "px")
+      .style("top", (d3.mouse(this)[1]) + "px")
+  }
+  var mouseleave = function(d) {
+    tooltip
+      .style("opacity", 0)
+    d3.select(this)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+  }
+
+  // add the squares
+  svg.selectAll()
+    .data(data, function(d) {return d.group+':'+d.variable;})
+    .enter()
+    .append("rect")
+      .attr("x", function(d) { return x(d.group) })
+      .attr("y", function(d) { return y(d.variable) })
+      .attr("rx", 4)
+      .attr("ry", 4)
+      .attr("width", x.bandwidth() )
+      .attr("height", y.bandwidth() )
+      .style("fill", function(d) { return myColor(d.value)} )
+      .style("stroke-width", 4)
+      .style("stroke", "none")
+      .style("opacity", 0.8)
+    .on("mouseover", mouseover)
+    .on("mousemove", mousemove)
+    .on("mouseleave", mouseleave)
+//})
+
+// Add title to graph
+svg.append("text")
+        .attr("x", 0)
+        .attr("y", -50)
+        .attr("text-anchor", "left")
+        .style("font-size", "22px")
+        .text("Matrix - D3blocks");
+
+// Add subtitle to graph
+svg.append("text")
+        .attr("x", 0)
+        .attr("y", -20)
+        .attr("text-anchor", "left")
+        .style("font-size", "14px")
+        .style("fill", "grey")
+        .style("max-width", 400)
+        .text("");
+
+
+        // SAVE CHART TO SVG
+        document.getElementById('saveButton').addEventListener('click', function () {
+            var svgData = document.querySelector('svg').outerHTML;
+            var blob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
+            var url = URL.createObjectURL(blob);
+            var link = document.createElement('a');
+            link.href = url;
+            link.download = 'Matrix - D3blocks.svg';
+            link.click();
+        });
+        
+
+</script>

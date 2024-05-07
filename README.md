@@ -1,7 +1,5 @@
 # AlgoRxplorers
 
-![](./img/ui.png)
-
 https://github.com/majiangqin/Enhancing-Drug-Design-with-Advanced-Protein-Stability-Prediction-Deep-Learning-Tools/assets/114206263/2a25abe6-aa5b-4e83-b909-1086154b8f14
 
 

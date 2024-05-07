@@ -2,6 +2,11 @@
 
 ![](./img/ui.png)
 
+https://github.com/majiangqin/Enhancing-Drug-Design-with-Advanced-Protein-Stability-Prediction-Deep-Learning-Tools/assets/114206263/2a25abe6-aa5b-4e83-b909-1086154b8f14
+
+
+
+
 ## Description
 It is an interactive web app that lets users explore the impact of amino acid point mutations on protein structure and thermostability. Users select a protein and mutation on the home screen, then are directed to a page where they can interact with the 3D structure of the protein both before and after the mutation. Users can also explore an interactive heatmap that predicts the change in thermostability based on other point mutations they did *not* select.
 
